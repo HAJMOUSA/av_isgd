@@ -1,0 +1,112 @@
+body {
+						background-color:#000000;
+						background-image:url('/img/ISGD-min.jpg');
+						background-repeat:no-repeat;
+						background-position:center;
+						background-size:cover;
+						font: bold 18px/25px Arial, sans-serif;
+						color:LightGray;
+	}
+ 
+				button {
+        				display: block;
+        				position: relative;
+        				margin: 10px;
+        				padding: 0 10px;
+        				text-align: center;
+        				text-decoration: none;
+        				width: 260px;
+        				height: 80px;
+        				font: bold 18px/25px Arial, sans-serif;    				
+        				color: black;
+        				
+        				text-shadow: 1px 1px 1px rgba(255,255,255, .22);
+        				-webkit-border-radius: 30px;
+   						-moz-border-radius: 30px;
+    					border-radius: 30px;
+ 
+    					-webkit-box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+    					-moz-box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+    					box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+ 
+    					-webkit-transition: all 0.15s ease;
+    					-moz-transition: all 0.15s ease;
+    					-o-transition: all 0.15s ease;
+    					-ms-transition: all 0.15s ease;
+    					transition: all 0.15s ease;
+        		}
+        		
+        		input[type="range"] {
+        				display: block;
+        				width: 160px;
+        				height: 45px;
+        		}
+ 
+				.styled-select select {
+				   background: transparent;
+				   width: 268px;
+				   padding: 5px;
+				   font-size: 16px;
+				   line-height: 1;
+				   border: 0;
+				   border-radius: 0;
+				   height: 34px;
+				   -webkit-appearance: none;
+				   }
+ 
+        		#gpio17.LOW {
+        				background-color: Green;
+        				color: LightGray;
+        		}
+        		
+        		#gpio17.HIGH {
+        				background-color: Red;
+        				color: LightGray;
+        		}
+        		
+        		#gpio18.LOW {
+        				background-color: Green;
+        				color: LightGray;
+        		}
+        		
+        		#gpio18.HIGH {
+        				background-color: Red;
+        				color: LightGray;
+        		}
+        		
+        		#gpio22.LOW {
+        				background-color: Green;
+        				color: LightGray;
+        		}
+        		
+        		#gpio22.HIGH {
+        				background-color: Red;
+        				color: LightGray;
+        		}
+        		
+        		#gpio23.LOW {
+        				background-color: Green;
+        				color: LightGray;
+        		}
+        		
+        		#gpio23.HIGH {
+        				background-color: Red;
+        				color: LightGray;
+        		}
+fieldset {
+    font-family: sans-serif;
+    border: 5px solid #1F497D;
+    background: #ddd;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+fieldset legend {
+    background: #1F497D;
+    color: #fff;
+    padding: 5px 10px ;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 0 0 5px #ddd;
+    margin-left: 20px;
+}

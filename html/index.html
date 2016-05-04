@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="viewport" content = "height = device-height, width = device-width, user-scalable = no" /> 
+        <title>ISGD AV Control</title>
+        <h1 align="center" > Audio Control </h1>
+		<script type="text/javascript" src="/webiopi.js"></script>
+        <script type="text/javascript" src="/scripts/ISGD_AV.js"></script>
+        <link rel="stylesheet" type="text/css" href="/styles/ISGD_AV.css">
+<!--        <link rel="shortcut icon" sizes="196x196" href="/img/ISGD.png" /> -->
+</head>
+<body
+</br>
+</br>
+</br>
+<script>
+
+function ATEN_Comamnd(browser) {
+	if (browser == 0){
+		document.getElementById("Serial_Command").value="sw o01 video off";
+	}
+	else{
+		document.getElementById("Serial_Command").value="sw i0"+browser +" o01";
+	}
+	//Send Data to serial port
+	PrintString(document.getElementById("Serial_Command").value);
+}
+
+</script>
+
+<div id="content" align="center"></div>
+<div id="c	anvas">
+<h1 align="center"> Video Control </h1>
+
+<section style="margin: 10px;">
+<fieldset style="min-height:150px;">
+<label> <br/> </label>
+<label> <br/> </label>
+<fieldset   class="fieldset-auto-width">
+	<legend>Prayer Hall Projector's Video input</legend>
+		<select name="Zone1" onchange="ATEN_Comamnd(this.value)" size="5">
+		  <option value="1" selected="selected"> Main_Hall Camera</option>
+		  <option value="2">Sister Plateform HDMI1</option>
+		  <option value="3">Gymansium HDM1</option>
+		  <option value="4">Gymnasium HDM2</option>
+		  <option Value="0"> Off</option>
+		</select>
+</fieldset>
+
+<label> <br/> </label>
+<fieldset   class="fieldset-auto-width">
+	<legend>Sister's Are Video input</legend>
+		<select name="Zone2"  onchange="ATEN_Comamnd(this.value)" size="5">
+		  <option value="1" selected="selected"> Main_Hall Camera</option>
+		  <option value="2">Sister Plateform HDMI1</option>
+		  <option value="3">Gymansium HDM1</option>
+		  <option value="4">Gymnasium HDM2</option>
+		  <option Value="0"> Off</option>
+		</select>
+</fieldset>
+
+<fieldset   class="fieldset-auto-width">
+	<legend>Foyer Video input</legend>
+		<select name="Zone3" onchange="ATEN_Comamnd(this.value)" size="5"> 
+		  <option value="1" selected="selected"> Main_Hall Camera</option>
+		  <option value="2">Sister Plateform HDMI1</option>
+		  <option value="3">Gymansium HDM1</option>
+		  <option value="4">Gymnasium HDM2</option>
+		  <option Value="0"> Off</option>
+		</select>
+</fieldset>
+
+<fieldset   class="fieldset-auto-width">
+	<legend>Gymansium Video input</legend>
+		<select name="Zone3" onchange="ATEN_Comamnd(this.value)"size="5">
+		  <option value="1" selected="selected"> Main_Hall Camera</option>
+		  <option value="2">Sister Plateform HDMI1</option>
+		  <option value="3">Gymansium HDM1</option>
+		  <option value="4">Gymnasium HDM2</option>
+		  <option Value="0"> Off</option>
+		</select>
+</fieldset>
+	
+<br><br><br>
+	zone1 Command  <input type="text" id="Serial_Command" size="20">	
+</body>
+</html>
+
+
