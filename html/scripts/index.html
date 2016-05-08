@@ -7,22 +7,8 @@
         <title>ISGD AV Control</title>
         <script type="text/javascript" src="/webiopi.js"></script>
         <script type="text/javascript" src="/scripts/ISGD_AV.js"></script>
-        <link rel="stylesheet" type="text/css" href="/styles/ISGD_AV.css">
+        <!--link rel="stylesheet" type="text/css" href="/styles/ISGD_AV.css"-->
 <!--        <link rel="shortcut icon" sizes="196x196" href="/img/ISGD.png" /> -->
-<style>
-.initbutton {background-color: green;}
-  .textbox {
-    background: white;
-    border: 1px solid #ffa853;
-    border-radius: 5px;
-    box-shadow: 0 0 5px 3px #ffa853;
-    color: #666;
-    outline: none;
-    height:23px;
-    width: 40px;
-  }
-
-</style>
 </head>
 <body
 </br>
@@ -79,41 +65,35 @@ function SendVolume(who)
           serialusb0.write("GYM_BUTTON: "+document.getElementById("GY_VOLUME").value);
         }
     }
+
+
 }
+
 function DisableButton(who)
 {
   if(who.checked == true)
     {
-      if(who.id == "MH_MUTE"){
-          document.getElementById("MH_Button").disabled = true;
-          document.getElementById("MH_Button").style.background = "red";
-      }else if (who.id =="SIS_MUTE"){
-          document.getElementById("SIS_Button").disabled = true;
-          document.getElementById("SIS_Button").style.background = "red";
-      }else if (who.id =="FY_MUTE"){
-          document.getElementById("FY_Button").disabled = true;
-          document.getElementById("FY_Button").style.background = "red";
-      }else if (who.id =="GY_MUTE"){
-          document.getElementById("GY_Button").disabled = true;
-          document.getElementById("GY_Button").style.background = "red";
-      }
+      if(who.id == "MH_MUTE")
+        document.getElementById("MH_Button").disabled = true;
+      else if (who.id =="SIS_MUTE")
+        document.getElementById("SIS_Button").disabled = true;
+      else if (who.id =="FY_MUTE")
+        document.getElementById("FY_Button").disabled = true;
+      else if (who.id =="GY_MUTE")
+        document.getElementById("GY_Button").disabled = true;
     }
     else
     {
-      if(who.id == "MH_MUTE"){
-      document.getElementById("MH_Button").disabled = false;
-       document.getElementById("MH_Button").style.background = "green";
-     }else if (who.id =="SIS_MUTE"){
-      document.getElementById("SIS_Button").disabled = false
-      document.getElementById("SIS_Button").style.background = "green";
-    }else if (who.id =="FY_MUTE"){
-      document.getElementById("FY_Button").disabled = false;
-      document.getElementById("FY_Button").style.background = "green";
-    }else if (who.id =="GY_MUTE"){
-      document.getElementById("GY_Button").disabled = false;
-      document.getElementById("GY_Button").style.background = "green";
+      if(who.id == "MH_MUTE")
+        document.getElementById("MH_Button").disabled = false;
+      else if (who.id =="SIS_MUTE")
+        document.getElementById("SIS_Button").disabled = false;
+      else if (who.id =="FY_MUTE")
+        document.getElementById("FY_Button").disabled = false;
+      else if (who.id =="GY_MUTE")
+        document.getElementById("GY_Button").disabled = false;
     }
-  }
+
 }
 </script>
 
@@ -125,37 +105,37 @@ function DisableButton(who)
 
   <input type="checkbox" name="MH_MUTE" id="MH_MUTE" onchange="DisableButton(this)"/>
   </p>
-  <input class="textbox" type="text" id="MH_VOLUME" size="20" value=-10>
+  <input type="text" id="MH_VOLUME" size="20">
   <input type="range" id= "MHSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="MH_Button" onclick="SendVolume(this)">Update Main Hall Volume</button>
+  <button  id="MH_Button" onclick="SendVolume(this)">Update Main Hall Volume</button>
 </div>
 
 <div class="relative">
   <h3>Sister's Audio Control</h3>
   <p>Mute :
-  <input type="checkbox" name="SIS_MUTE" id="SIS_MUTE"onchange="DisableButton(this)"/>
+  <input type="checkbox" name="SIS_MUTE" id="SIS_MUTE"/>
   </p>
-  <input class="textbox" type="text" id="SIS_VOLUME" size="20" value=-10>
+  <input type="text" id="SIS_VOLUME" size="20">
   <input type="range" id= "SISSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="SIS_Button" onclick="SendVolume(this)">Update Sister's Area Volume</button>
+  <button  id="SIS_Button" onclick="SendVolume(this)">Update Sister's Area Volume</button>
 </div>
 <div class="relative">
   <h3> Foyer Hall Audio Control</h3>
   <p>Mute :
-  <input type="checkbox" name="FY_MUTE" id="FY_MUTE" onchange="DisableButton(this)"/>
+  <input type="checkbox" name="FY_MUTE" id="FY_MUTE"/>
 </p>
-  <input class="textbox" type="text" id="FY_VOLUME" size="20" value=-10>
+  <input type="text" id="FY_VOLUME" size="20">
   <input type="range" id= "FYSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="FY_Button" onclick="SendVolume(this)">Update Foyer Volume</button>
+  <button  id="FY_Button" onclick="SendVolume(this)">Update Foyer Volume</button>
 </div>
 <div class="relative">
   <h3>GYMNASIUM Audio Control</h3>
   <p>Mute :
-  <input type="checkbox" name="GY_MUTE" id="GY_MUTE"onchange="DisableButton(this)"/>
+  <input type="checkbox" name="GY_MUTE" id="GY_MUTE"/>
   </p>
-  <input class="textbox" type="text" id="GY_VOLUME" size="20" value=-10>
+  <input type="text" id="GY_VOLUME" size="20">
   <input type="range" id= "GYSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button class = "button initbutton" id="GY_Button" onclick="SendVolume(this)">Update GYMNASIUM Volume</button>
+  <button  id="GY_Button" onclick="SendVolume(this)">Update GYMNASIUM Volume</button>
 </div>
 
 
