@@ -28,18 +28,17 @@
 </br>
 </br>
 <script>
-function ATEN_Comamnd(browser) {
-	if (browser == 0){
-		document.getElementById("Serial_Command").value="sw o01 video off";
+function ATEN_Comamnd(who) {
+	if (who.value == 0){
+		document.getElementById("Serial_Command").value="sw o0"+who.name+" off";
 	}
 	else{
-		document.getElementById("Serial_Command").value="sw i0"+browser +" o01";
+		document.getElementById("Serial_Command").value="sw i0"+who.value +" o0"+who.name;
 	}
 	//Send Data to serial port
-  serialusb0.write(document.getElementById("Serial_Command").value);
-  //serialusb0.read(timeCallback);
-	//SendCommand(document.getElementById("Serial_Command").value);
+  serialusb0.write(document.getElementById("Serial_Command").value+"\r\n");
 }
+
 function ChangeAudioVolume(who)
 {
   if(who.id == "MHSlider")
@@ -126,8 +125,7 @@ function DisableButton(who)
   <input type="checkbox" name="MH_MUTE" id="MH_MUTE" onchange="DisableButton(this)"/>
   </p>
   <input class="textbox" type="text" id="MH_VOLUME" size="20" value=-10>
-  <input type="range" id= "MHSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="MH_Button" onclick="SendVolume(this)">Update Main Hall Volume</button>
+  <input type="range" id= "MHSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 
 <div class="relative">
@@ -136,8 +134,7 @@ function DisableButton(who)
   <input type="checkbox" name="SIS_MUTE" id="SIS_MUTE"onchange="DisableButton(this)"/>
   </p>
   <input class="textbox" type="text" id="SIS_VOLUME" size="20" value=-10>
-  <input type="range" id= "SISSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="SIS_Button" onclick="SendVolume(this)">Update Sister's Area Volume</button>
+  <input type="range" id= "SISSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 <div class="relative">
   <h3> Foyer Hall Audio Control</h3>
@@ -145,8 +142,7 @@ function DisableButton(who)
   <input type="checkbox" name="FY_MUTE" id="FY_MUTE" onchange="DisableButton(this)"/>
 </p>
   <input class="textbox" type="text" id="FY_VOLUME" size="20" value=-10>
-  <input type="range" id= "FYSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button  class = "button initbutton" id="FY_Button" onclick="SendVolume(this)">Update Foyer Volume</button>
+  <input type="range" id= "FYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 <div class="relative">
   <h3>GYMNASIUM Audio Control</h3>
@@ -154,9 +150,9 @@ function DisableButton(who)
   <input type="checkbox" name="GY_MUTE" id="GY_MUTE"onchange="DisableButton(this)"/>
   </p>
   <input class="textbox" type="text" id="GY_VOLUME" size="20" value=-10>
-  <input type="range" id= "GYSlider" min="-10" max="45" value="-10" step="1" oninput="ChangeAudioVolume(this)" width="304" height="228"/>
-  <button class = "button initbutton" id="GY_Button" onclick="SendVolume(this)">Update GYMNASIUM Volume</button>
+  <input type="range" id= "GYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
+
 
 
 <div id="content" align="center"></div>
@@ -169,7 +165,7 @@ function DisableButton(who)
 <label> <br/> </label>
 <fieldset   class="fieldset-auto-width">
 	<legend>Prayer Hall Projector's Video input</legend>
-		<select name="Zone1" onchange="ATEN_Comamnd(this.value)" size="5">
+		<select name="1" onchange="ATEN_Comamnd(this)" size="5">
 		  <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
 		  <option value="3">Office_HDMI</option>
@@ -181,7 +177,7 @@ function DisableButton(who)
 <label> <br/> </label>
 <fieldset   class="fieldset-auto-width">
 	<legend>Sister's Are Video input</legend>
-		<select name="Zone2"  onchange="ATEN_Comamnd(this.value)" size="5">
+		<select name="2"  onchange="ATEN_Comamnd(this)" size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
 		  <option value="3">Office_HDMI</option>
@@ -192,7 +188,7 @@ function DisableButton(who)
 
 <fieldset   class="fieldset-auto-width">
 	<legend>Foyer Video input</legend>
-		<select name="Zone3" onchange="ATEN_Comamnd(this.value)" size="5">
+		<select name="3" onchange="ATEN_Comamnd(this)" size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
 		  <option value="3">Office_HDMI</option>
@@ -203,7 +199,7 @@ function DisableButton(who)
 
 <fieldset   class="fieldset-auto-width">
 	<legend>Gymansium Video input</legend>
-		<select name="Zone3" onchange="ATEN_Comamnd(this.value)"size="5">
+		<select name="4" onchange="ATEN_Comamnd(this)"size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
 		  <option value="3">Office_HDMI</option>
