@@ -28,6 +28,15 @@
 </br>
 </br>
 <script>
+
+function startup() {
+  var el = document.getElementsByTagName("canvas")[0];
+  el.addEventListener("touchend", handleEnd, false);
+}
+
+function handleEnd(evt) {
+}
+
 function ATEN_Comamnd(who) {
 	if (who.value == 0){
 		document.getElementById("Serial_Command").value="sw o0"+who.name+" off";
@@ -41,77 +50,64 @@ function ATEN_Comamnd(who) {
 
 function ChangeAudioVolume(who)
 {
-  if(who.id == "MHSlider")
-        document.getElementById("MH_VOLUME").value = who.value;
-  else if(who.id == "SISSlider")
-          document.getElementById("SIS_VOLUME").value = who.value;
-  else if(who.id == "FYSlider")
-          document.getElementById("FY_VOLUME").value = who.value;
-  else if(who.id == "GYSlider")
-          document.getElementById("GY_VOLUME").value = who.value;
-
+  if(who.id == "MHSlider"){
+      if(  document.getElementById("MH_MUTE").checked ==false)
+        serialusb1.write('set fader "MH_OUTPUT" '+ who.value+"\r\n");
+    }
+  else if(who.id == "FYSlider"){
+      if(  document.getElementById("FY_MUTE").checked ==false)
+          serialusb1.write('set fader "FOYER_OUTPUT" '+ who.value+"\r\n");
+        }
+  else if(who.id == "GYSlider"){
+      if(  document.getElementById("GY_MUTE").checked ==false)
+          serialusb1.write('set fader "GYM_OUTPUT" '+who.value+"\r\n");
+        }
 }
 
-function SendVolume(who)
+function UpdateVolume(who)
 {
-  if(who.id == "MH_Button")
-    {
-      if(document.getElementById("MH_MUTE").checked == false){
-        serialusb0.write("MH_VOLUME: "+document.getElementById("MH_VOLUME").value);
-      }
+  if(who.id == "MHSlider"){
+      if(  document.getElementById("MH_MUTE").checked ==false)
+          document.getElementById("MH_VOLUME").value = who.value;
     }
-    else if(who.id == "SIS_Button")
-    {
-        if(document.getElementById("SIS_MUTE").checked == false){
-          serialusb0.write("SIS_VOLUME: "+document.getElementById("SIS_VOLUME").value);
+  else if(who.id == "FYSlider"){
+    if(  document.getElementById("FY_MUTE").checked ==false)
+          document.getElementById("FY_VOLUME").value = who.value;
         }
-    }
-    else if(who.id == "FY_Button")
-    {
-        if(document.getElementById("FY_MUTE").checked == false){
-          serialusb0.write("FOYER_VOLUME: "+document.getElementById("FY_VOLUME").value);
+  else if(who.id == "GYSlider"){
+    if(  document.getElementById("GY_MUTE").checked ==false)
+          document.getElementById("GY_VOLUME").value = who.value;
         }
-    }
-    else if(who.id == "GY_Button")
-    {
-        if(document.getElementById("GY_MUTE").checked == false){
-          serialusb0.write("GYM_BUTTON: "+document.getElementById("GY_VOLUME").value);
-        }
-    }
+
 }
+
 function DisableButton(who)
 {
   if(who.checked == true)
     {
       if(who.id == "MH_MUTE"){
-          document.getElementById("MH_Button").disabled = true;
-          document.getElementById("MH_Button").style.background = "red";
-      }else if (who.id =="SIS_MUTE"){
-          document.getElementById("SIS_Button").disabled = true;
-          document.getElementById("SIS_Button").style.background = "red";
+        serialusb1.write('set mute "MH_OUTPUT" 1'+"\r\n");
+        document.getElementById("MHSlider").disabled = true;
       }else if (who.id =="FY_MUTE"){
-          document.getElementById("FY_Button").disabled = true;
-          document.getElementById("FY_Button").style.background = "red";
+        serialusb1.write('set mute "FOYER_OUTPUT" 1'+"\r\n");
+          document.getElementById("FYSlider").disabled = true;
       }else if (who.id =="GY_MUTE"){
-          document.getElementById("GY_Button").disabled = true;
-          document.getElementById("GY_Button").style.background = "red";
+        serialusb1.write('set mute "GYM_OUTPUT" 1'+"\r\n");
+          document.getElementById("GYSlider").disabled = true;
       }
     }
     else
     {
       if(who.id == "MH_MUTE"){
-      document.getElementById("MH_Button").disabled = false;
-       document.getElementById("MH_Button").style.background = "green";
-     }else if (who.id =="SIS_MUTE"){
-      document.getElementById("SIS_Button").disabled = false
-      document.getElementById("SIS_Button").style.background = "green";
-    }else if (who.id =="FY_MUTE"){
-      document.getElementById("FY_Button").disabled = false;
-      document.getElementById("FY_Button").style.background = "green";
-    }else if (who.id =="GY_MUTE"){
-      document.getElementById("GY_Button").disabled = false;
-      document.getElementById("GY_Button").style.background = "green";
-    }
+        serialusb1.write('set mute "MH_OUTPUT" 0'+"\r\n");
+        document.getElementById("MHSlider").disabled = false;
+      }else if (who.id =="FY_MUTE"){
+        serialusb1.write('set mute "FOYER_OUTPUT" 0'+"\r\n");
+        document.getElementById("FYSlider").disabled = false;
+      }else if (who.id =="GY_MUTE"){
+        serialusb1.write('set mute "GYM_OUTPUT" 0'+"\r\n");
+        document.getElementById("GYSlider").disabled = false;
+      }
   }
 }
 </script>
@@ -124,25 +120,17 @@ function DisableButton(who)
 
   <input type="checkbox" name="MH_MUTE" id="MH_MUTE" onchange="DisableButton(this)"/>
   </p>
-  <input class="textbox" type="text" id="MH_VOLUME" size="20" value=-10>
-  <input type="range" id= "MHSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
+  <input class="textbox" type="text" id="MH_VOLUME" size="20" value=-10 onchange= "ChangeAudioVolume(MHSlider)">
+  <input type="range" id= "MHSlider" min="-100" max="20" value="-10" step="1" oninput= "UpdateVolume(this)" onclick="ChangeAudioVolume(this)" touchend= "ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 
-<div class="relative">
-  <h3>Sister's Audio Control</h3>
-  <p>Mute :
-  <input type="checkbox" name="SIS_MUTE" id="SIS_MUTE"onchange="DisableButton(this)"/>
-  </p>
-  <input class="textbox" type="text" id="SIS_VOLUME" size="20" value=-10>
-  <input type="range" id= "SISSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
-</div>
 <div class="relative">
   <h3> Foyer Hall Audio Control</h3>
   <p>Mute :
   <input type="checkbox" name="FY_MUTE" id="FY_MUTE" onchange="DisableButton(this)"/>
 </p>
   <input class="textbox" type="text" id="FY_VOLUME" size="20" value=-10>
-  <input type="range" id= "FYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
+  <input type="range" id= "FYSlider" min="-100" max="20" value="-10" step="1"  oninput= "UpdateVolume(this)" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 <div class="relative">
   <h3>GYMNASIUM Audio Control</h3>
@@ -150,7 +138,7 @@ function DisableButton(who)
   <input type="checkbox" name="GY_MUTE" id="GY_MUTE"onchange="DisableButton(this)"/>
   </p>
   <input class="textbox" type="text" id="GY_VOLUME" size="20" value=-10>
-  <input type="range" id= "GYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
+  <input type="range" id= "GYSlider" min="-100" max="20" value="-10" step="1"  oninput= "UpdateVolume(this)" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
 </div>
 
 
@@ -168,20 +156,20 @@ function DisableButton(who)
 		<select name="1" onchange="ATEN_Comamnd(this)" size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
-		  <option value="3">Gymnasium HDMI</option>
-		  <option value="4">Office_HDMI</option>
+		  <option value="3">Office_HDMI</option>
+		  <option value="4">Gymnasium HDMI</option>
 		  <option Value="0"> Off</option>
 		</select>
 </fieldset>
 
 <label> <br/> </label>
 <fieldset   class="fieldset-auto-width">
-	<legend>Sister's Are Video input</legend>
+	<legend>Sister's Area Video input</legend>
 		<select name="2"  onchange="ATEN_Comamnd(this)" size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
-      <option value="3">Gymnasium HDMI</option>
-		  <option value="4">Office_HDMI</option>
+      <option value="3">Office_HDMI</option>
+		  <option value="4">Gymnasium HDMI</option>
 		  <option Value="0"> Off</option>
 		</select>
 </fieldset>
@@ -191,8 +179,8 @@ function DisableButton(who)
 		<select name="3" onchange="ATEN_Comamnd(this)" size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
-      <option value="3">Gymnasium HDMI</option>
-		  <option value="4">Office_HDMI</option>
+      <option value="3">Office_HDMI</option>
+		  <option value="4">Gymnasium HDMI</option>
 		  <option Value="0"> Off</option>
 		</select>
 </fieldset>
@@ -202,8 +190,8 @@ function DisableButton(who)
 		<select name="4" onchange="ATEN_Comamnd(this)"size="5">
       <option value="1" selected="selected"> Main_Hall Camera</option>
 		  <option value="2">Main_Hall HDMI</option>
-      <option value="3">Gymnasium HDMI</option>
-		  <option value="4">Office_HDMI</option>
+      <option value="3">Office_HDMI</option>
+		  <option value="4">Gymnasium HDMI</option>
 		  <option Value="0"> Off</option>
 		</select>
 </fieldset>

@@ -5,154 +5,121 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="viewport" content = "height = device-height, width = device-width, user-scalable = no" />
         <title>ISGD AV Control</title>
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script type="text/javascript" src="/webiopi.js"></script>
         <script type="text/javascript" src="/scripts/ISGD_AV.js"></script>
-        <link rel="stylesheet" type="text/css" href="/styles/ISGD_AV.css">
+
 <!--        <link rel="shortcut icon" sizes="196x196" href="/img/ISGD.png" /> -->
-<style>
-.initbutton {background-color: green;}
-  .textbox {
-    background: white;
-    border: 1px solid #ffa853;
-    border-radius: 5px;
-    box-shadow: 0 0 5px 3px #ffa853;
-    color: #666;
-    outline: none;
-    height:23px;
-    width: 40px;
-  }
-
-</style>
 </head>
-<body
-</br>
-</br>
+<body>
 <script>
-function ATEN_Comamnd(who) {
-	if (who.value == 0){
-		document.getElementById("Serial_Command").value="sw o0"+who.name+" off";
-	}
-	else{
-		document.getElementById("Serial_Command").value="sw i0"+who.value +" o0"+who.name;
-	}
-	//Send Data to serial port
-  serialusb0.write(document.getElementById("Serial_Command").value+"\r\n");
-}
+//Jquery events
+$(document).ready(function(){
 
+
+    $('.isgdmute').on("vclick", function() {
+          DisableButton(this);
+    });
+    $('.isgdslider').on("slidestop", function() {
+        ChangeAudioVolume(this);
+    });
+
+    $('select').on("change",function () {
+        ATEN_Comamnd(this);
+    });
+});
+//Mute actions
+
+// Video controls
+function ATEN_Comamnd(who) {
+	if (who.value == 0)
+		document.getElementById("Serial_Command").value="sw o0"+who.name+" off";
+	else
+		document.getElementById("Serial_Command").value="sw i0"+who.value +" o0"+who.name;
+	//Send Data to serial port
+    serialusb0.write(document.getElementById("Serial_Command").value+"\r\n");
+}
+//Polycomm Audio controls.
 function ChangeAudioVolume(who)
 {
-  if(who.id == "MHSlider")
-        document.getElementById("MH_VOLUME").value = who.value;
-  else if(who.id == "SISSlider")
-          document.getElementById("SIS_VOLUME").value = who.value;
-  else if(who.id == "FYSlider")
-          document.getElementById("FY_VOLUME").value = who.value;
-  else if(who.id == "GYSlider")
-          document.getElementById("GY_VOLUME").value = who.value;
-
+  if(who.id == "MH_OUTPUT"){
+      if(  document.getElementById("MH_MUTE").checked ==false)
+        serialusb1.write('set fader "MH_OUTPUT" '+ who.value+"\r\n");
+    }
+  else if(who.id == "FOYER_OUTPUT"){
+      if(  document.getElementById("FY_MUTE").checked ==false)
+          serialusb1.write('set fader "FOYER_OUTPUT" '+ who.value+"\r\n");
+        }
+  else if(who.id == "GYM_OUTPUT"){
+      if(  document.getElementById("GY_MUTE").checked ==false)
+          serialusb1.write('set fader "GYM_OUTPUT" '+who.value+"\r\n");
+        }
 }
 
-function SendVolume(who)
-{
-  if(who.id == "MH_Button")
-    {
-      if(document.getElementById("MH_MUTE").checked == false){
-        serialusb0.write("MH_VOLUME: "+document.getElementById("MH_VOLUME").value);
-      }
-    }
-    else if(who.id == "SIS_Button")
-    {
-        if(document.getElementById("SIS_MUTE").checked == false){
-          serialusb0.write("SIS_VOLUME: "+document.getElementById("SIS_VOLUME").value);
-        }
-    }
-    else if(who.id == "FY_Button")
-    {
-        if(document.getElementById("FY_MUTE").checked == false){
-          serialusb0.write("FOYER_VOLUME: "+document.getElementById("FY_VOLUME").value);
-        }
-    }
-    else if(who.id == "GY_Button")
-    {
-        if(document.getElementById("GY_MUTE").checked == false){
-          serialusb0.write("GYM_BUTTON: "+document.getElementById("GY_VOLUME").value);
-        }
-    }
-}
 function DisableButton(who)
 {
   if(who.checked == true)
     {
       if(who.id == "MH_MUTE"){
-          document.getElementById("MH_Button").disabled = true;
-          document.getElementById("MH_Button").style.background = "red";
-      }else if (who.id =="SIS_MUTE"){
-          document.getElementById("SIS_Button").disabled = true;
-          document.getElementById("SIS_Button").style.background = "red";
+        serialusb1.write('set mute "MH_OUTPUT" 1'+"\r\n");
+        serialusb1.write('set mute "Main_Prayer_Hall" 1'+"\r\n");
+        //$('#MH_OUTPUT').slider('disable');
+        //document.getElementById("MH_OUTPUT").disabled = true;
       }else if (who.id =="FY_MUTE"){
-          document.getElementById("FY_Button").disabled = true;
-          document.getElementById("FY_Button").style.background = "red";
+        serialusb1.write('set mute "FOYER_OUTPUT" 1'+"\r\n");
+        //document.getElementById("FOYER_OUTPUT").disabled = true;
       }else if (who.id =="GY_MUTE"){
-          document.getElementById("GY_Button").disabled = true;
-          document.getElementById("GY_Button").style.background = "red";
+        serialusb1.write('set mute "GYM_OUTPUT" 1'+"\r\n");
+        serialusb1.write('set mute "Gym_Mic" 1'+"\r\n");
+          //document.getElementById("GYM_OUTPUT").disabled = true;
       }
     }
     else
     {
       if(who.id == "MH_MUTE"){
-      document.getElementById("MH_Button").disabled = false;
-       document.getElementById("MH_Button").style.background = "green";
-     }else if (who.id =="SIS_MUTE"){
-      document.getElementById("SIS_Button").disabled = false
-      document.getElementById("SIS_Button").style.background = "green";
-    }else if (who.id =="FY_MUTE"){
-      document.getElementById("FY_Button").disabled = false;
-      document.getElementById("FY_Button").style.background = "green";
-    }else if (who.id =="GY_MUTE"){
-      document.getElementById("GY_Button").disabled = false;
-      document.getElementById("GY_Button").style.background = "green";
-    }
+        serialusb1.write('set mute "MH_OUTPUT" 0'+"\r\n");
+        serialusb1.write('set mute "Main_Prayer_Hall" 0'+"\r\n");
+        //$('#MH_OUTPUT').slider('enable');
+        //document.getElementById("MH_OUTPUT").disabled = false;
+      }else if (who.id =="FY_MUTE"){
+        serialusb1.write('set mute "FOYER_OUTPUT" 0'+"\r\n");
+        //document.getElementById("FOYER_OUTPUT").disabled = false;
+      }else if (who.id =="GY_MUTE"){
+        serialusb1.write('set mute "GYM_OUTPUT" 0'+"\r\n");
+        serialusb1.write('set mute "Gym_Mic" 0'+"\r\n");
+        //document.getElementById("GYM_OUTPUT").disabled = false;
+      }
   }
 }
+
 </script>
 
 <h1 align="center" > Audio Control </h1>
 
 <div class="relative">
   <h3>Main Hall Audio Control</h3>
-  <p>Mute :
-
-  <input type="checkbox" name="MH_MUTE" id="MH_MUTE" onchange="DisableButton(this)"/>
-  </p>
-  <input class="textbox" type="text" id="MH_VOLUME" size="20" value=-10>
-  <input type="range" id= "MHSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
+  <input type="range"    class="isgdslider" name="MH_OUTPUT" id= "MH_OUTPUT" min="-100" max="45" value="0" step="1" data-popup-enabled="true"/>
+  <p> Mute:
+  <input type="checkbox" class="isgdmute" name="MH_MUTE" id="MH_MUTE" />
+  <p>
 </div>
 
 <div class="relative">
-  <h3>Sister's Audio Control</h3>
-  <p>Mute :
-  <input type="checkbox" name="SIS_MUTE" id="SIS_MUTE"onchange="DisableButton(this)"/>
-  </p>
-  <input class="textbox" type="text" id="SIS_VOLUME" size="20" value=-10>
-  <input type="range" id= "SISSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
-</div>
-<div class="relative">
-  <h3> Foyer Hall Audio Control</h3>
-  <p>Mute :
-  <input type="checkbox" name="FY_MUTE" id="FY_MUTE" onchange="DisableButton(this)"/>
-</p>
-  <input class="textbox" type="text" id="FY_VOLUME" size="20" value=-10>
-  <input type="range" id= "FYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
-</div>
-<div class="relative">
-  <h3>GYMNASIUM Audio Control</h3>
-  <p>Mute :
-  <input type="checkbox" name="GY_MUTE" id="GY_MUTE"onchange="DisableButton(this)"/>
-  </p>
-  <input class="textbox" type="text" id="GY_VOLUME" size="20" value=-10>
-  <input type="range" id= "GYSlider" min="-100" max="45" value="-10" step="1" onclick="ChangeAudioVolume(this)" width="304" height="228"/>
-</div>
-
+    <h3>Foyer Audio Control</h3>
+    <input type="range"    class="isgdslider" name="FOYER_OUTPUT" id= "FOYER_OUTPUT" min="-100" max="45" value="0" step="1" data-popup-enabled="true"/>
+    <p> Mute:
+    <input type="checkbox" class="isgdmute" name="FY_MUTE" id="FY_MUTE" />
+    <p>
+    </div>
+    <div class="relative">
+      <h3>Gymansium Audio Control</h3>
+      <input type="range"    class="isgdslider" name="GYM_OUTPUT" id= "GYM_OUTPUT" min="-100" max="45" value="0" step="1" data-popup-enabled="true"/>
+      <p> Mute:
+      <input type="checkbox" class="isgdmute" name="GY_MUTE" id="GY_MUTE" />
+      <p>
+      </div>
 
 
 <div id="content" align="center"></div>
@@ -163,50 +130,49 @@ function DisableButton(who)
 <fieldset style="min-height:150px;">
 <label> <br/> </label>
 <label> <br/> </label>
-<fieldset   class="fieldset-auto-width">
-	<legend>Prayer Hall Projector's Video input</legend>
-		<select name="1" onchange="ATEN_Comamnd(this)" size="5">
-		  <option value="1" selected="selected"> Main_Hall Camera</option>
-		  <option value="2">Main_Hall HDMI</option>
-		  <option value="3">Office_HDMI</option>
-		  <option value="4">Gymnasium HDMI</option>
-		  <option Value="0"> Off</option>
-		</select>
-</fieldset>
 
-<label> <br/> </label>
-<fieldset   class="fieldset-auto-width">
-	<legend>Sister's Are Video input</legend>
-		<select name="2"  onchange="ATEN_Comamnd(this)" size="5">
-      <option value="1" selected="selected"> Main_Hall Camera</option>
-		  <option value="2">Main_Hall HDMI</option>
-		  <option value="3">Office_HDMI</option>
-		  <option value="4">Gymnasium HDMI</option>
-		  <option Value="0"> Off</option>
-		</select>
-</fieldset>
+<label for="SISSelect" class="select">Main Prayer Hall Video input:</label>
+<select name="1" id="1" >
+  <option value="1" selected="selected"> Main_Hall Camera</option>
+  <option value="2">Main_Hall HDMI</option>
+  <option value="3">Office_HDMI</option>
+  <option value="4">Gymnasium HDMI</option>
+  <option value="0">Off</option>
+</select>
+</div>
 
-<fieldset   class="fieldset-auto-width">
-	<legend>Foyer Video input</legend>
-		<select name="3" onchange="ATEN_Comamnd(this)" size="5">
-      <option value="1" selected="selected"> Main_Hall Camera</option>
-		  <option value="2">Main_Hall HDMI</option>
-		  <option value="3">Office_HDMI</option>
-		  <option value="4">Gymnasium HDMI</option>
-		  <option Value="0"> Off</option>
-		</select>
-</fieldset>
+<label for="FYSelect" class="select">Sister's Monitors Video input:</label>
+<select name="2" id="2" >
+  <option value="1" selected="selected"> Main_Hall Camera</option>
+  <option value="2">Main_Hall HDMI</option>
+  <option value="3">Office_HDMI</option>
+  <option value="4">Gymnasium HDMI</option>
+  <option value="0">Off</option>
+</select>
+</div>
 
-<fieldset   class="fieldset-auto-width">
-	<legend>Gymansium Video input</legend>
-		<select name="4" onchange="ATEN_Comamnd(this)"size="5">
-      <option value="1" selected="selected"> Main_Hall Camera</option>
-		  <option value="2">Main_Hall HDMI</option>
-		  <option value="3">Office_HDMI</option>
-		  <option value="4">Gymnasium HDMI</option>
-		  <option Value="0"> Off</option>
-		</select>
-</fieldset>
-	Command to Send to ATEN <input type="text" id="Serial_Command" size="20">
+<label for="GYMSelect" class="select">Foyer Monitor Video input:</label>
+<select name="3" id="3" >
+  <option value="1" selected="selected"> Main_Hall Camera</option>
+  <option value="2">Main_Hall HDMI</option>
+  <option value="3">Office_HDMI</option>
+  <option value="4">Gymnasium HDMI</option>
+  <option value="0">Off</option>
+</select>
+</div>
+<label for="MHSelect" class="select">Gymnasium Projector Video input:</label>
+<select name="4" id="4" >
+  <option value="1" selected="selected"> Main_Hall Camera</option>
+  <option value="2">Main_Hall HDMI</option>
+  <option value="3">Office_HDMI</option>
+  <option value="4">Gymnasium HDMI</option>
+  <option value="0">Off</option>
+</select>
+</div>
+<label for="Polycomm Command">PolyComm Command:</label>
+<input type="text" name="Polycomm_Command" id="Polycomm_Command" value=""/>
+
+<label for="aten Command">Aten Command:</label>
+<input type="text" name="Serial_Command" id="Serial_Command" value=""/>
 </body>
 </html>
