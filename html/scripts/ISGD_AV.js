@@ -48,3 +48,86 @@
 				// pass true to refresh repeatedly of false to refresh once
 				webiopi().refreshGPIO(true);
 				};
+        //Jquery events
+        $(document).ready(function(){
+
+
+            $('.isgdmute').on("vclick", function() {
+                  DisableButton(this);
+            });
+            $('.isgdslider').on("slidestop", function() {
+                ChangeAudioVolume(this);
+            });
+
+            $('select').on("change",function () {
+                ATEN_Comamnd(this);
+            });
+        });
+        //Mute actions
+        // Video controls
+        function ATEN_Comamnd(who) {
+        	if (who.value == 0)
+        		document.getElementById("Aten_Command").value="sw o0"+who.name+" off";
+        	else
+        		document.getElementById("Aten_Command").value="sw i0"+who.value +" o0"+who.name;
+        	//Send Data to serial port
+/*            serialusb0.write(document.getElementById("Aten_Command").value+"\r\n");
+            data = serialusb0.read();
+            document.getElementById("Aten_Response").value = data;
+*/
+        }
+        //Polycomm Audio controls.
+        function ChangeAudioVolume(who)
+        {
+          if(who.id == "MH_OUTPUT"){
+              if(  document.getElementById("MH_MUTE").checked ==false)
+                serialusb1.write('set fader "MH_OUTPUT" '+ who.value+"\r\n");
+            }
+          else if(who.id == "FOYER_OUTPUT"){
+              if(  document.getElementById("FY_MUTE").checked ==false)
+                  serialusb1.write('set fader "FOYER_OUTPUT" '+ who.value+"\r\n");
+                }
+          else if(who.id == "GYM_OUTPUT"){
+              if(  document.getElementById("GY_MUTE").checked ==false)
+                  serialusb1.write('set fader "GYM_OUTPUT" '+who.value+"\r\n");
+                }
+/*          data = serialusb1.read();
+          document.getElementById("Polycomm_Response").value = data;
+*/
+        }
+
+        function DisableButton(who)
+        {
+          if(who.checked == true)
+            {
+              if(who.id == "MH_MUTE"){
+                serialusb1.write('set mute "MH_OUTPUT" 1'+"\r\n");
+                serialusb1.write('set mute "Main_Prayer_Hall" 1'+"\r\n");
+                //$('#MH_OUTPUT').slider('disable');
+                //document.getElementById("MH_OUTPUT").disabled = true;
+              }else if (who.id =="FY_MUTE"){
+                serialusb1.write('set mute "FOYER_OUTPUT" 1'+"\r\n");
+                //document.getElementById("FOYER_OUTPUT").disabled = true;
+              }else if (who.id =="GY_MUTE"){
+                serialusb1.write('set mute "GYM_OUTPUT" 1'+"\r\n");
+                serialusb1.write('set mute "Gym_Mic" 1'+"\r\n");
+                  //document.getElementById("GYM_OUTPUT").disabled = true;
+              }
+            }
+            else
+            {
+              if(who.id == "MH_MUTE"){
+                serialusb1.write('set mute "MH_OUTPUT" 0'+"\r\n");
+                serialusb1.write('set mute "Main_Prayer_Hall" 0'+"\r\n");
+                //$('#MH_OUTPUT').slider('enable');
+                //document.getElementById("MH_OUTPUT").disabled = false;
+              }else if (who.id =="FY_MUTE"){
+                serialusb1.write('set mute "FOYER_OUTPUT" 0'+"\r\n");
+                //document.getElementById("FOYER_OUTPUT").disabled = false;
+              }else if (who.id =="GY_MUTE"){
+                serialusb1.write('set mute "GYM_OUTPUT" 0'+"\r\n");
+                serialusb1.write('set mute "Gym_Mic" 0'+"\r\n");
+                //document.getElementById("GYM_OUTPUT").disabled = false;
+              }
+          }
+        }
