@@ -71,10 +71,16 @@
         	else
         		document.getElementById("Aten_Command").value="sw i0"+who.value +" o0"+who.name;
         	//Send Data to serial port
-/*            serialusb0.write(document.getElementById("Aten_Command").value+"\r\n");
-            data = serialusb0.read();
+            serialusb0.write(document.getElementById("Aten_Command").value+"\r\n");
+
+            var data;
+            serialusb0.read(function(data) {
+              alert("received " + data)
+            });
+            serialusb0.read(function(data) {
+              alert("received " + data)
+            });
             document.getElementById("Aten_Response").value = data;
-*/
         }
         //Polycomm Audio controls.
         function ChangeAudioVolume(who)
@@ -91,9 +97,15 @@
               if(  document.getElementById("GY_MUTE").checked ==false)
                   serialusb1.write('set fader "GYM_OUTPUT" '+who.value+"\r\n");
                 }
-/*          data = serialusb1.read();
+           var data
+           serialusb1.read(function(data) {
+            alert("received " + data)
+          });
+          serialusb1.read(function(data) {
+           alert("received " + data)
+         });
           document.getElementById("Polycomm_Response").value = data;
-*/
+
         }
 
         function DisableButton(who)
