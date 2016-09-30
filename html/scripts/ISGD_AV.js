@@ -9,18 +9,28 @@
 serialusb1.write('get fader "MH_OUTPUT" '+"\r\n");
 serialusb1.write('get fader "FOYER_OUTPUT" '+"\r\n");
 serialusb1.write('get fader "GYM_OUTPUT" '+"\r\n");
+serialusb1.write('get mute  "MH_OUTPUT"'+"\r\n");
+serialusb1.write('get mute "FOYER_OUTPUT" '+"\r\n");
+serialusb1.write('get mute "GYM_OUTPUT" '+"\r\n");
 //wait for time delay of 1 seconds to allow polycomm reply
-setTimeout(PolycommInit, 500);
+setTimeout(PolycommInit, 1000);
 }
 //Function to parse responses and populate default values.
         function PolycommInit(){
           serialusb1.read(function(data){
             data1 = data;
-            MH_OUTPUT.value = data1.split("MH_OUTPUT").pop().substring(1,7).replace(/[^\d.-]/g, '');
+            MH_OUTPUT.value = Number(data1.split('val fader "MH_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, ''));
             data1 = data;
-            FOYER_OUTPUT.value = data1.split("FOYER_OUTPUT").pop().substring(1,7).replace(/[^\d.-]/g, '');
+            FOYER_OUTPUT.value = Number(data1.split('val fader "FOYER_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, ''));
             data1 = data;
-            GYM_OUTPUT.value = data1.split("GYM_OUTPUT").pop().substring(1,7).replace(/[^\d.-]/g, '');;
+            GYM_OUTPUT.value = Number(data1.split('val fader "GYM_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, ''));
+            data1 = data;
+            MH_MUTE.checked = Boolean(Number(data1.split('val mute "MH_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, '')));
+            data1 = data;
+            FY_MUTE.checked = Boolean(Number(data1.split('val mute "FOYER_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, '')));
+            data1 = data;
+            GY_MUTE.checked  = Boolean(Number(data1.split('val mute "GYM_OUTPUT"').pop().substring(1,7).replace(/[^\d.-]/g, '')));
+
         });
       }
         //Jquery events
