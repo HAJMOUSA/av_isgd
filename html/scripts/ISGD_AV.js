@@ -35,7 +35,7 @@ setTimeout(PolycommInit, 1000);
       }
         //Jquery events
         $(document).ready(function(){
-            $('.isgdmute').on("vclick", function() {
+            $('.isgdmute').on("change", function() {
                   DisableButton(this);
             });
             $('.isgdslider').on("slidestop", function() {
@@ -46,6 +46,22 @@ setTimeout(PolycommInit, 1000);
                 ATEN_Comamnd(this);
             });
         });
+        function PolycommMute(who){
+          serialusb1.read(function(data){
+            //read response and make extract volume control.
+            if(data ==='')
+              alert(" Communication problems, check internet connection")
+            else {
+                var temp = data.split(who.name);
+                if(temp.length === 1)
+                  alert(" Communication problems, check internet connection")
+                else {
+                      who.value = Boolean(Number(temp.pop().substring(1,7).replace(/[^\d.-]/g, '')));
+                      document.getElementById("Polycomm_Response").value = who.value;
+                }
+            }
+          });
+        }
         function AtenCollectData(){
           serialusb0.read(function(data) {
             document.getElementById("Aten_Response").value = data;
@@ -90,32 +106,14 @@ setTimeout(PolycommInit, 1000);
 
         function DisableButton(who)
         {
-          if(who.checked == true)
-            {
               if(who.id == "MH_MUTE"){
-                serialusb1.write('set mute "MH_OUTPUT" 1'+"\r\n");
-                serialusb1.write('set mute "Main_Prayer_Hall" 1'+"\r\n");
-                $("#MH_OUTPUT").hide();
+                serialusb1.write('set mute "MH_OUTPUT" '+Number(who.checked)+"\r\n");
+                serialusb1.write('set mute "Main_Prayer_Hall" '+Number(who.checked)+"\r\n");
               }else if (who.id =="FY_MUTE"){
-                serialusb1.write('set mute "FOYER_OUTPUT" 1'+"\r\n");
+                serialusb1.write('set mute "FOYER_OUTPUT" '+Number(who.checked)+"\r\n");
               }else if (who.id =="GY_MUTE"){
-                serialusb1.write('set mute "GYM_OUTPUT" 1'+"\r\n");
-                serialusb1.write('set mute "Gym_Mic" 1'+"\r\n");
+                serialusb1.write('set mute "GYM_OUTPUT" '+Number(who.checked)+"\r\n");
+                serialusb1.write('set mute "Gym_Mic" '+Number(who.checked)+"\r\n");
               }
-            }
-            else
-            {
-              if(who.id == "MH_MUTE"){
-                serialusb1.write('set mute "MH_OUTPUT" 0'+"\r\n");
-                serialusb1.write('set mute "Main_Prayer_Hall" 0'+"\r\n");
-                $("#MH_OUTPUT").show();
-              }else if (who.id =="FY_MUTE"){
-                serialusb1.write('set mute "FOYER_OUTPUT" 0'+"\r\n");
-                //document.getElementById("FOYER_OUTPUT").disabled = false;
-              }else if (who.id =="GY_MUTE"){
-                serialusb1.write('set mute "GYM_OUTPUT" 0'+"\r\n");
-                serialusb1.write('set mute "Gym_Mic" 0'+"\r\n");
-                //document.getElementById("GYM_OUTPUT").disabled = false;
-              }
-          }
-        }
+          setTimeout(PolycommMute, 500,who);
+      }
